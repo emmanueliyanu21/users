@@ -6,7 +6,6 @@ This is a single-page application built with Angular, allowing users to register
 ## Default Admin Information
 - **Username:** admin
 - **Role:** admin
-- **Temporary Key:** abc123
 
 ## Completed Features
 - User registration
