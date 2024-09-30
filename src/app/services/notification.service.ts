@@ -2,20 +2,13 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root', // Provide it in the root injector
 })
 export class NotificationService {
-  private successSubject = new Subject<string>();
-  private errorSubject = new Subject<string>();
+  private toastSubject = new Subject<{ message: string, success: boolean }>();
+  toast$ = this.toastSubject.asObservable();
 
-  success$ = this.successSubject.asObservable();
-  error$ = this.errorSubject.asObservable();
-
-  showSuccess(message: string) {
-    this.successSubject.next(message);
-  }
-
-  showError(message: string) {
-    this.errorSubject.next(message);
+  show(message: string, success: boolean = true) {
+    this.toastSubject.next({ message, success });
   }
 }

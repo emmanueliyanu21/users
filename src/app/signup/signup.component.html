@@ -49,10 +49,33 @@
       <div class="form-button mt-6">
         <button
           type="submit"
-          class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md font-medium shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          class="w-full flex items-center justify-center bg-indigo-600 text-white py-2 px-4 rounded-md font-medium shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           [disabled]="isSubmitting"
         >
-          {{ isSubmitting ? "Submitting..." : "Sign Up" }}
+          <svg
+            *ngIf="isSubmitting"
+            class="animate-spin h-5 w-5 text-white mr-2"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v8H4z"
+            ></path>
+          </svg>
+          <span *ngIf="!isSubmitting">Sign Up</span>
+          <span *ngIf="isSubmitting">Submitting...</span>
         </button>
       </div>
     </form>
