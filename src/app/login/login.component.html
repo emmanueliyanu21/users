@@ -1,38 +1,50 @@
-<div class="login-container">
-  <div class="signup-card">
-    <h2 class="signup-title">Login</h2>
+<div class="h-[90vh] flex items-center justify-center bg-gray-100 p-4">
+  <div class="w-full max-w-md bg-white shadow-md rounded-lg p-8">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
 
-    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="signup-form">
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="space-y-4">
       <div class="form-group">
-        <label for="first_name" class="form-label">First Name:</label>
+        <label for="first_name" class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
         <input
           type="text"
           id="first_name"
           formControlName="first_name"
-          class="form-input"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
           placeholder="Enter your first name"
           required
         />
       </div>
 
       <div class="form-group">
-        <label for="tempKey" class="form-label">Temporary Key:</label>
+        <label for="tempKey" class="block text-sm font-medium text-gray-700 mb-1">Temporary Key</label>
         <input
           type="text"
           id="tempKey"
           formControlName="tempKey"
-          class="form-input"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
           placeholder="Enter your temporary key"
           required
         />
       </div>
 
-      <button type="submit" class="btn-submit">Login</button>
+      <div class="form-group mt-6">
+        <button
+          type="submit"
+          [disabled]="isSubmitting"
+          class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md font-medium shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 flex items-center justify-center"
+        >
+          <svg *ngIf="isSubmitting" class="animate-spin h-5 w-5 text-white mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+          </svg>
+          <span *ngIf="!isSubmitting">Login</span>
+          <span *ngIf="isSubmitting">Logging in...</span>
+        </button>
+      </div>
     </form>
 
-    <div *ngIf="successMessage" class="success-message">
-      {{ successMessage }}
+    <div *ngIf="errorMessage" class="mt-4 text-red-600 text-center">
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
     </div>
-    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
   </div>
 </div>

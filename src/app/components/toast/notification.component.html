@@ -1,0 +1,12 @@
+<div
+  *ngIf="successMessage"
+  class="fixed bottom-5 right-5 px-4 py-2 rounded-md text-white bg-green-600 shadow-md transition-opacity duration-300"
+>
+  {{ successMessage }}
+</div>
+<div
+  *ngIf="errorMessage"
+  class="fixed bottom-5 right-5 px-4 py-2 rounded-md text-white bg-red-600 shadow-md transition-opacity duration-300"
+>
+  {{ errorMessage }}
+</div>

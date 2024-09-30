@@ -1,46 +1,64 @@
-<div class="signup-container">
-  <div class="signup-card">
-    <h2 class="signup-title">Create an Account</h2>
+<div class="h-[90vh] flex items-center justify-center bg-gray-100 px-4">
+  <div class="w-full max-w-md bg-white shadow-md rounded-lg p-8">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
+      Create an Account
+    </h2>
 
-    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="signup-form">
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="space-y-4">
       <div class="form-group">
-        <label for="first_name" class="form-label">First Name</label>
+        <label
+          for="first_name"
+          class="block text-sm font-medium text-gray-700 mb-1"
+          >First Name</label
+        >
         <input
           id="first_name"
           formControlName="first_name"
-          class="form-input"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
           placeholder="Enter your First Name"
         />
       </div>
+
       <div class="form-group">
-        <label for="last_name" class="form-label">Last Name</label>
+        <label
+          for="last_name"
+          class="block text-sm font-medium text-gray-700 mb-1"
+          >Last Name</label
+        >
         <input
           id="last_name"
           formControlName="last_name"
-          class="form-input"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
           placeholder="Enter your Last Name"
         />
       </div>
 
       <div class="form-group">
-        <label for="email" class="form-label">Email</label>
+        <label for="email" class="block text-sm font-medium text-gray-700 mb-1"
+          >Email</label
+        >
         <input
           id="email"
           formControlName="email"
           type="email"
-          class="form-input"
+          class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
           placeholder="Enter your email"
         />
       </div>
 
-      <button type="submit" class="btn-submit" [disabled]="isSubmitting">
-        {{ isSubmitting ? "Submitting..." : "Sign Up" }}
-      </button>
+      <div class="form-button mt-6">
+        <button
+          type="submit"
+          class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md font-medium shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          [disabled]="isSubmitting"
+        >
+          {{ isSubmitting ? "Submitting..." : "Sign Up" }}
+        </button>
+      </div>
     </form>
 
-    <div *ngIf="successMessage" class="success-message">
-      {{ successMessage }}
+    <div *ngIf="errorMessage" class="mt-4 text-red-600 text-center">
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
     </div>
-    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
   </div>
 </div>

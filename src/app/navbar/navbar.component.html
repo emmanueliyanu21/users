@@ -1,23 +1,55 @@
-<nav class="navbar">
-  <ul class="navbar-left">
-    <li><a [routerLink]="'/signup'" routerLinkActive="active">Sign Up</a></li>
-
-    <li *ngIf="isLoggedIn">
-      <a [routerLink]="'/admin-crud'" routerLinkActive="active">Admin Users</a>
-    </li>
-  </ul>
-
-  <div class="navbar-right">
-    <ul class="navbar-left">
-      <li *ngIf="isLoggedIn">
-        <a (click)="logout()" class="btn-logout">Logout</a>
+<nav class="bg-white shadow-md py-4 px-4 sm:px-6 lg:px-8">
+  <div class="container mx-auto flex justify-between items-center">
+    <ul class="flex space-x-4">
+      <li>
+        <a
+          [routerLink]="'/signup'"
+          routerLinkActive="font-bold text-indigo-600"
+          class="text-gray-700 hover:text-indigo-600"
+        >
+          Sign Up
+        </a>
       </li>
-      <li *ngIf="!isLoggedIn">
-        <a [routerLink]="'/login'" routerLinkActive="active">Login</a>
+
+      <li *ngIf="isLoggedIn">
+        <a
+          [routerLink]="'/admin-crud'"
+          routerLinkActive="font-bold text-indigo-600"
+          class="text-gray-700 hover:text-indigo-600"
+        >
+          Admin Users
+        </a>
       </li>
     </ul>
-    <div *ngIf="isLoggedIn">
-      <span class="initials">{{ userFirstName?.charAt(0)?.toUpperCase() }}{{ userLastName?.charAt(0)?.toUpperCase() }}</span>
+
+    <div class="flex items-center space-x-4">
+      <ul class="flex space-x-4">
+        <li *ngIf="isLoggedIn">
+          <a
+            (click)="logout()"
+            class="text-gray-700 hover:text-red-600 cursor-pointer"
+          >
+            Logout
+          </a>
+        </li>
+        <li *ngIf="!isLoggedIn">
+          <a
+            [routerLink]="'/login'"
+            routerLinkActive="font-bold text-indigo-600"
+            class="text-gray-700 hover:text-indigo-600"
+          >
+            Login
+          </a>
+        </li>
+      </ul>
+
+      <div *ngIf="isLoggedIn" class="flex items-center">
+        <span
+          class="initials bg-indigo-600 text-white rounded-full h-8 w-8 flex items-center justify-center font-bold"
+        >
+          {{ userFirstName?.charAt(0)?.toUpperCase() }}{{ userLastName?.charAt(0)?.toUpperCase() }}
+        </span>
+      </div>
     </div>
   </div>
 </nav>
