@@ -39,24 +39,29 @@ export class SignupComponent {
   onSubmit() {
     if (this.signupForm.valid) {
       this.isSubmitting = true;
-
       this.userService.submitUser(this.signupForm.value).subscribe({
         next: (response) => {
-          this.notificationService.showSuccess('User registered successfully!');
           this.errorMessage = '';
-          this.signupForm.reset();
-          this.isSubmitting = false;
-
-          setTimeout(() => {
-            this.router.navigate(['/login']);
-          }, 3000);
+          if (response) {
+            setTimeout(() => {
+              this.isSubmitting = false;
+              this.signupForm.reset();
+              this.notificationService.show(
+                'User registered successfully!',
+                true
+              );
+              this.router.navigate(['/login']);
+            }, 3000);
+          }
         },
         error: (error) => {
-          this.errorMessage = 'Error registering user!';
+          this.notificationService.show('Error registering user!', false);
           this.successMessage = '';
           this.isSubmitting = false;
         },
       });
+    } else {
+      this.errorMessage = 'Fill the form properly';
     }
   }
 }

@@ -45,13 +45,14 @@ export class LoginComponent {
           if (success) {
             setTimeout(() => {
               this.isSubmitting = false;
-              this.notificationService.showSuccess('Login successful!');
+              this.notificationService.show('Login successful!', true);
               this.router.navigate(['/admin-crud']);
             }, 3000);
             
           } else {
             this.isSubmitting = false;
-            this.errorMessage = 'Invalid username or temporary key.';
+            this.notificationService.show('Invalid username or temporary key.', true);
+            // this.errorMessage = 'Invalid username or temporary key.';
           }
         },
         error: (error) => {

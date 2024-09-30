@@ -1,28 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../services/notification.service';
-import { NgIf } from '@angular/common';
 
 @Component({
-  selector: 'app-notification',
+  selector: 'app-notification-component',
   standalone: true,
-  imports: [NgIf],
+  imports: [CommonModule],
   templateUrl: './notification.component.html',
 })
-export class NotificationComponent implements OnInit {
-  successMessage: string | null = null;
-  errorMessage: string | null = null;
+export class ToastNotificationComponent {
+  showToast = false;
+  message = '';
+  isSuccess = true;
 
-  constructor(private notificationService: NotificationService) {}
+  constructor(private toastService: NotificationService) {}
 
   ngOnInit() {
-    this.notificationService.success$.subscribe((message) => {
-      this.successMessage = message;
-      setTimeout(() => (this.successMessage = null), 3000); 
-    });
-
-    this.notificationService.error$.subscribe((message) => {
-      this.errorMessage = message;
-      setTimeout(() => (this.errorMessage = null), 3000); 
+    this.toastService.toast$.subscribe(({ message, success }) => {
+      this.message = message;
+      this.isSuccess = success;
+      this.showToast = true;
+      setTimeout(() => this.showToast = false, 3000); // Auto-hide after 3 seconds
     });
   }
+
+  closeToast() {
+    this.showToast = false;
+  }
 }
+
