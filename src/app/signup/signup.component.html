@@ -1,0 +1,46 @@
+<div class="signup-container">
+  <div class="signup-card">
+    <h2 class="signup-title">Create an Account</h2>
+
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="signup-form">
+      <div class="form-group">
+        <label for="first_name" class="form-label">First Name</label>
+        <input
+          id="first_name"
+          formControlName="first_name"
+          class="form-input"
+          placeholder="Enter your First Name"
+        />
+      </div>
+      <div class="form-group">
+        <label for="last_name" class="form-label">Last Name</label>
+        <input
+          id="last_name"
+          formControlName="last_name"
+          class="form-input"
+          placeholder="Enter your Last Name"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="email" class="form-label">Email</label>
+        <input
+          id="email"
+          formControlName="email"
+          type="email"
+          class="form-input"
+          placeholder="Enter your email"
+        />
+      </div>
+
+      <button type="submit" class="btn-submit" [disabled]="isSubmitting">
+        {{ isSubmitting ? "Submitting..." : "Sign Up" }}
+      </button>
+    </form>
+
+    <div *ngIf="successMessage" class="success-message">
+      {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+  </div>
+</div>

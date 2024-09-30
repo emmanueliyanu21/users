@@ -1,0 +1,23 @@
+<nav class="navbar">
+  <ul class="navbar-left">
+    <li><a [routerLink]="'/signup'" routerLinkActive="active">Sign Up</a></li>
+
+    <li *ngIf="isLoggedIn">
+      <a [routerLink]="'/admin-crud'" routerLinkActive="active">Admin Users</a>
+    </li>
+  </ul>
+
+  <div class="navbar-right">
+    <ul class="navbar-left">
+      <li *ngIf="isLoggedIn">
+        <a (click)="logout()" class="btn-logout">Logout</a>
+      </li>
+      <li *ngIf="!isLoggedIn">
+        <a [routerLink]="'/login'" routerLinkActive="active">Login</a>
+      </li>
+    </ul>
+    <div *ngIf="isLoggedIn">
+      <span class="initials">{{ userFirstName?.charAt(0)?.toUpperCase() }}{{ userLastName?.charAt(0)?.toUpperCase() }}</span>
+    </div>
+  </div>
+</nav>

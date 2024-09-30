@@ -1,0 +1,38 @@
+<div class="login-container">
+  <div class="signup-card">
+    <h2 class="signup-title">Login</h2>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="signup-form">
+      <div class="form-group">
+        <label for="first_name" class="form-label">First Name:</label>
+        <input
+          type="text"
+          id="first_name"
+          formControlName="first_name"
+          class="form-input"
+          placeholder="Enter your first name"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="tempKey" class="form-label">Temporary Key:</label>
+        <input
+          type="text"
+          id="tempKey"
+          formControlName="tempKey"
+          class="form-input"
+          placeholder="Enter your temporary key"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn-submit">Login</button>
+    </form>
+
+    <div *ngIf="successMessage" class="success-message">
+      {{ successMessage }}
+    </div>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+  </div>
+</div>
