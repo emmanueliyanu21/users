@@ -7,14 +7,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { NgIf } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import { NotificationService } from '../services/notification.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, NgIf, HttpClientModule],
+  imports: [ReactiveFormsModule, NgIf, NgClass],
   templateUrl: './login.component.html',
 })
 export class LoginComponent {
@@ -22,6 +21,12 @@ export class LoginComponent {
   successMessage: string = '';
   errorMessage: string = '';
   isSubmitting: boolean = false;
+  showTempKey: boolean = false;
+
+  icons = {
+    eyeOpen: './../assets/icons/eye.svg',
+    eyeSlash: './../assets/icons/eye-off.svg',
+  };
 
   constructor(
     private userService: UserService,
@@ -47,12 +52,13 @@ export class LoginComponent {
               this.isSubmitting = false;
               this.notificationService.show('Login successful!', true);
               this.router.navigate(['/admin-crud']);
-            }, 3000);
-            
+            }, 2000);
           } else {
             this.isSubmitting = false;
-            this.notificationService.show('Invalid username or temporary key.', true);
-            // this.errorMessage = 'Invalid username or temporary key.';
+            this.notificationService.show(
+              'Invalid username or temporary key.',
+              false
+            );
           }
         },
         error: (error) => {
@@ -63,5 +69,9 @@ export class LoginComponent {
     } else {
       this.errorMessage = 'Please fill in all fields correctly.';
     }
+  }
+
+  toggleTempKey() {
+    this.showTempKey = !this.showTempKey;
   }
 }
