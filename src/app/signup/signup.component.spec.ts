@@ -4,8 +4,7 @@ import {
   fakeAsync,
   tick,
 } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { SignupComponent } from './signup.component';
@@ -23,7 +22,7 @@ describe('SignupComponent', () => {
     userService = jasmine.createSpyObj('UserService', ['registerUser']);
 
     await TestBed.configureTestingModule({
-      imports: [SignupComponent, FormsModule], // Use imports instead of declarations
+      imports: [SignupComponent, FormsModule],
       providers: [{ provide: UserService, useValue: userService }],
     }).compileComponents();
   });
@@ -58,7 +57,7 @@ describe('SignupComponent', () => {
       first_name: '',
       last_name: '',
       email: '',
-    }); // Check if form resets
+    }); 
   }));
 
   it('should show error message when form is invalid', () => {
