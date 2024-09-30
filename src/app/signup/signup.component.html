@@ -33,9 +33,11 @@
         />
       </div>
 
-      <button type="submit" class="btn-submit" [disabled]="isSubmitting">
-        {{ isSubmitting ? "Submitting..." : "Sign Up" }}
-      </button>
+      <div class="form-button">
+        <button type="submit" class="btn-submit" [disabled]="isSubmitting">
+          {{ isSubmitting ? "Submitting..." : "Sign Up" }}
+        </button>
+      </div>
     </form>
 
     <div *ngIf="successMessage" class="success-message">

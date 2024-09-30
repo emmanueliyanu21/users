@@ -16,6 +16,10 @@
   width: 100%;
 }
 
+.signup-form{
+  padding: 40px 40px 40px 10px;
+}
+
 .signup-title {
   font-size: 24px;
   font-weight: bold;
