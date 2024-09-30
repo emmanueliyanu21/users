@@ -15,7 +15,6 @@ import { Subscription } from 'rxjs';
     NgIf
   ],
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css'] 
 })
 export class NavbarComponent {
   isLoggedIn: boolean = false;

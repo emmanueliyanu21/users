@@ -9,13 +9,13 @@ import { NgIf } from '@angular/common';
 import { UserService } from '../services/user.service';
 import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { NotificationService } from '../services/notification.service';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
   imports: [ReactiveFormsModule, NgIf, HttpClientModule],
   templateUrl: './signup.component.html',
-  styleUrl: './signup.component.css',
 })
 export class SignupComponent {
   signupForm: FormGroup;
@@ -23,7 +23,12 @@ export class SignupComponent {
   errorMessage: string = '';
   isSubmitting: boolean = false;
 
-  constructor(private fb: FormBuilder, private userService: UserService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private userService: UserService,
+    private router: Router,
+    private notificationService: NotificationService
+  ) {
     this.signupForm = this.fb.group({
       first_name: ['', Validators.required],
       last_name: ['', Validators.required],
@@ -33,14 +38,14 @@ export class SignupComponent {
 
   onSubmit() {
     if (this.signupForm.valid) {
-      this.isSubmitting = true; 
+      this.isSubmitting = true;
 
       this.userService.submitUser(this.signupForm.value).subscribe({
         next: (response) => {
-          this.successMessage = 'User registered successfully!';
+          this.notificationService.showSuccess('User registered successfully!');
           this.errorMessage = '';
           this.signupForm.reset();
-          this.isSubmitting = false; 
+          this.isSubmitting = false;
 
           setTimeout(() => {
             this.router.navigate(['/login']);
@@ -49,7 +54,7 @@ export class SignupComponent {
         error: (error) => {
           this.errorMessage = 'Error registering user!';
           this.successMessage = '';
-          this.isSubmitting = false; 
+          this.isSubmitting = false;
         },
       });
     }

@@ -1,71 +1,112 @@
-<div class="crud-container">
-  <div *ngIf="showEditForm">
-    <h2>Edit Users</h2>
-    <form (ngSubmit)="onSubmit()">
+<div class="h-[90vh] bg-gray-100 p-6 flex flex-col items-center">
+  <div
+    *ngIf="showEditForm"
+    class="w-full max-w-[800px] bg-white p-6 rounded-lg shadow-lg"
+  >
+    <h2 class="text-xl font-bold mb-4 text-gray-800">Edit Users</h2>
+    <form (ngSubmit)="onSubmit()" class="space-y-4">
       <div>
-        <label for="first_name">First Name:</label>
+        <label for="first_name" class="block text-sm font-medium text-gray-700"
+          >First Name:</label
+        >
         <input
           type="text"
           id="first_name"
           [(ngModel)]="record.first_name"
           name="first_name"
           required
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
         />
       </div>
+
       <div>
-        <label for="last_name">Last Name:</label>
+        <label for="last_name" class="block text-sm font-medium text-gray-700"
+          >Last Name:</label
+        >
         <input
           type="text"
           id="last_name"
           [(ngModel)]="record.last_name"
           name="last_name"
           required
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
         />
       </div>
+
       <div>
-        <label for="role">Role:</label>
-        <select id="role" [(ngModel)]="record.role" name="role">
-          <option value="admin">Admin</option>
-          <option value="user">User</option>
-          <option value="pending">Pending</option>
-        </select>
+        <label for="Email" class="block text-sm font-medium text-gray-700"
+          >Email:</label
+        >
+        <input
+          type="text"
+          id="email"
+          [(ngModel)]="record.email"
+          name="email"
+          required
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+        />
       </div>
-      <button type="submit">Update</button>
+
+      <button
+        type="submit"
+        class="w-full bg-indigo-600 text-white py-2 px-4 rounded-md font-medium shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      >
+        Update
+      </button>
     </form>
   </div>
 
-  <h3>Existing Users</h3>
-  <ul *ngFor="let user of users">
-    <li *ngIf="user.role !== userRole.DEFAULT_ADMIN">
-      <span>{{ user.first_name }} {{ user.last_name }} - {{ user.email }}</span>
-      <div>
-        <button
-          class="approve"
-          *ngIf="!user.approved && +user.id === +loggedInUser.id + 1"
-          (click)="approveRecord(user)"
+  <h3 class="text-lg font-semibold mt-8 mb-4 text-gray-800">Existing Users</h3>
+  <div
+    *ngIf="users.length > 1; else noUsers"
+    class="w-full max-w-[800px] bg-white rounded-lg shadow-lg p-6"
+  >
+    <ul class="space-y-4">
+      <li *ngFor="let user of users">
+        <div
+          class="flex  flex-wrap justify-between items-center p-4"
+          *ngIf="user.role !== userRole.DEFAULT_ADMIN"
         >
-          Approve
-        </button>
+          <span class="text-gray-700"
+            >{{ user.first_name }} {{ user.last_name }} - {{ user.email }}</span
+          >
+          <div class="mt-2 flex space-x-2">
+            <button
+              class="bg-indigo-600 text-white hover:bg-indigo-700 hover:text-white rounded-md py-2 px-4 transition duration-300"
+              *ngIf="!user.approved && +user.id === +loggedInUser.id + 1"
+              (click)="approveRecord(user)"
+            >
+              Approve
+            </button>
 
-        <div *ngIf="user.approved">
-          <button
-            *ngIf="user.id === loggedInUser.id + 1"
-            (click)="editUser(user)"
-          >
-            Edit
-          </button>
-          <button
-            *ngIf="user.id === loggedInUser.id + 1"
-            (click)="deleteRecord(user.first_name)"
-          >
-            Delete
-          </button>
+            <div *ngIf="user.approved" class="flex space-x-2">
+              <button
+                *ngIf="user.id === loggedInUser.id + 1"
+                (click)="editUser(user)"
+                class="bg-blue-600 text-white hover:bg-blue-700 rounded-md py-2 px-4 transition duration-300"
+              >
+                Edit
+              </button>
+
+              <button
+                *ngIf="user.id === loggedInUser.id + 1"
+                (click)="deleteRecord(user.first_name)"
+                class="bg-red-600 text-white hover:bg-red-700 rounded-md py-2 px-4 transition duration-300"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-    </li>
-  </ul>
+      </li>
+    </ul>
+  </div>
 
-  <div *ngIf="tempMessage" class="temp-message">
+  <ng-template #noUsers>
+    <div class="text-gray-700">No users found.</div>
+  </ng-template>
+
+  <div *ngIf="tempMessage" class="text-indigo-600 mt-6">
     Temporary Key: {{ tempMessage }}
   </div>
 </div>

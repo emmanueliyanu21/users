@@ -10,11 +10,10 @@ import { ROLE } from '../Enum/Role';
   standalone: true,
   imports: [NgFor, FormsModule, NgIf],
   templateUrl: './admin-crud.component.html',
-  styleUrl: './admin-crud.component.css',
 })
 export class AdminCrudComponent {
   users: User[] = [];
-  record: any = { first_name: '', last_name: '', role: '' };
+  record: any = { first_name: '', last_name: '', email: '' };
   tempMessage: string | null = null;
   loggedInUser: any;
   userRole = ROLE;

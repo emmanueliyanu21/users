@@ -9,23 +9,25 @@ import {
 } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgIf } from '@angular/common';
+import { NotificationService } from '../services/notification.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [ReactiveFormsModule, NgIf, HttpClientModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
 })
 export class LoginComponent {
   loginForm: FormGroup;
   successMessage: string = '';
   errorMessage: string = '';
+  isSubmitting: boolean = false;
 
   constructor(
     private userService: UserService,
     private router: Router,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private notificationService: NotificationService
   ) {
     this.loginForm = this.fb.group({
       first_name: ['', Validators.required],
@@ -38,12 +40,17 @@ export class LoginComponent {
       const { first_name, tempKey } = this.loginForm.value;
       this.userService.login(first_name, tempKey).subscribe({
         next: (success) => {
+          this.isSubmitting = true;
+          this.errorMessage = '';
           if (success) {
-            this.successMessage = 'Login successful!';
             setTimeout(() => {
+              this.isSubmitting = false;
+              this.notificationService.showSuccess('Login successful!');
               this.router.navigate(['/admin-crud']);
             }, 3000);
+            
           } else {
+            this.isSubmitting = false;
             this.errorMessage = 'Invalid username or temporary key.';
           }
         },
