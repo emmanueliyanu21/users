@@ -8,7 +8,12 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../store/user';
 
 import * as UserActions from '../store/user.action';
-import { selectAllUsers, selectUserError, selectUserLoading } from '../store/user.selector';
+import {
+  selectAllUsers,
+  selectUserError,
+  selectUserLoading,
+} from '../store/user.selector';
+import { NotificationService } from '../services/notification.service';
 
 @Component({
   selector: 'app-admin-crud',
@@ -24,13 +29,17 @@ export class AdminCrudComponent {
   userRole = ROLE;
   showEditForm: boolean = false;
   editedUser!: User;
-  hasUsers: boolean = false; 
+  hasUsers: boolean = false;
 
   users$ = this.store.select(selectAllUsers);
   loading$ = this.store.select(selectUserLoading);
   error$ = this.store.select(selectUserError);
 
-  constructor(private userService: UserService, private store: Store<AppState>) {}
+  constructor(
+    private userService: UserService,
+    private notificationService: NotificationService,
+    private store: Store<AppState>
+  ) {}
 
   ngOnInit() {
     if (typeof window !== 'undefined') {
@@ -53,35 +62,37 @@ export class AdminCrudComponent {
 
     this.store.dispatch(UserActions.loadUsers());
 
-    this.users$.subscribe(users => {
-      this.hasUsers = users.length > 1; 
+    this.users$.subscribe((users) => {
+      this.hasUsers = users.length > 1;
     });
-
   }
 
   approveRecord(user: User) {
     if (user.id !== this.loggedInUser.id + 1) {
-      this.tempMessage = 'You can only approve the next user in sequence.';
-      setTimeout(() => {
-        this.tempMessage = null;
-      }, 5000);
+      this.notificationService.show(
+        'You can only approve the next user in sequence.',
+        false
+      );
+     
       return;
     }
 
     const tempKey = Math.random().toString(36).substring(2, 10);
 
-    user.approved = true;
-    user.role = 'admin';
-    user.tempKey = tempKey;
+    const updatedUser = {
+      ...user,
+      approved: true,
+      role: 'admin',
+      tempKey: tempKey,
+    };
 
-    this.userService.updateUser(user).subscribe((updatedUser) => {
+    this.userService.updateUser(updatedUser).subscribe((updatedUser) => {
       if (updatedUser) {
-        this.tempMessage = `Temporary Key: ${tempKey}`;
-        setTimeout(() => {
-          this.tempMessage = null;
-        }, 20000);
-      } else {
-      }
+        this.notificationService.show(
+          `User Approved Successfully`,
+          true
+        );
+      } 
     });
     this.store.dispatch(UserActions.loadUsers());
   }
@@ -110,10 +121,11 @@ export class AdminCrudComponent {
     this.showEditForm = true;
 
     if (user.id !== this.loggedInUser.id + 1) {
-      this.tempMessage = 'You can only Update the next user in sequence.';
-      setTimeout(() => {
-        this.tempMessage = null;
-      }, 5000);
+      this.notificationService.show(
+        'You can only Update the next user in sequence.',
+        false
+      );
+      
       return;
     }
 
@@ -126,10 +138,10 @@ export class AdminCrudComponent {
         this.showEditForm = false;
         localStorage.setItem('users', JSON.stringify(users));
         this.store.dispatch(UserActions.loadUsers());
-        this.tempMessage = `User ${updatedRecord.first_name} updated successfully.`;
-        setTimeout(() => {
-          this.tempMessage = null;
-        }, 5000);
+        this.notificationService.show(
+          `User ${updatedRecord.first_name} updated successfully.`,
+          true
+        );
       }
     });
   }
@@ -152,18 +164,17 @@ export class AdminCrudComponent {
         );
 
         localStorage.setItem('users', JSON.stringify(updatedUsers));
+        this.notificationService.show(
+          `User ${username} deleted successfully.`,
+          true
+        );
 
-        this.tempMessage = `User ${username} deleted successfully.`;
-        setTimeout(() => {
-          this.tempMessage = null;
-        }, 5000);
         this.store.dispatch(UserActions.loadUsers());
       } else {
-        this.tempMessage =
-          'Failed to delete user or you cannot delete your own record.';
-        setTimeout(() => {
-          this.tempMessage = null;
-        }, 5000);
+        this.notificationService.show(
+          'Failed to delete user or you cannot delete your own record.',
+          false
+        );
       }
     });
   }

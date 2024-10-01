@@ -35,15 +35,21 @@ export class LoginComponent {
     private notificationService: NotificationService
   ) {
     this.loginForm = this.fb.group({
-      first_name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
       tempKey: ['', Validators.required],
     });
   }
 
+  ngOnInit() {}
+
+  get email() {
+    return this.loginForm.get('email');
+  }
+
   onLogin() {
     if (this.loginForm.valid) {
-      const { first_name, tempKey } = this.loginForm.value;
-      this.userService.login(first_name, tempKey).subscribe({
+      const { email, tempKey } = this.loginForm.value;
+      this.userService.login(email, tempKey).subscribe({
         next: (success) => {
           this.isSubmitting = true;
           this.errorMessage = '';
@@ -67,6 +73,8 @@ export class LoginComponent {
         },
       });
     } else {
+      console.log(this.loginForm);
+      
       this.errorMessage = 'Please fill in all fields correctly.';
     }
   }

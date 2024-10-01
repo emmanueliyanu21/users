@@ -4,9 +4,8 @@
 This is a single-page application built with Angular, allowing users to register, log in, and manage their profiles. The application simulates an admin approval process and CRUD operations.
 
 ## Default Admin Information
-- **Username:** admin
-- **Role:** admin
-- **Temporary Key:** abc123
+- **email:** admin@gmail.com
+- **Temporary Key:** admin
 
 ## Completed Features
 - User registration
@@ -27,8 +26,3 @@ This is a single-page application built with Angular, allowing users to register
 - Node.js installed on your machine.
 - Angular CLI installed globally.
 
-### Installation Steps
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd <project-directory>
