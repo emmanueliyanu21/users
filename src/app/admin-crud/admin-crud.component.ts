@@ -1,14 +1,19 @@
 import { Component } from '@angular/core';
 import { UserService } from '../services/user.service';
-import { NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { User } from '../Interface/IUser';
 import { ROLE } from '../Enum/Role';
+import { Store } from '@ngrx/store';
+import { AppState } from '../store/user';
+
+import * as UserActions from '../store/user.action';
+import { selectAllUsers, selectUserError, selectUserLoading } from '../store/user.selector';
 
 @Component({
   selector: 'app-admin-crud',
   standalone: true,
-  imports: [NgFor, FormsModule, NgIf],
+  imports: [NgFor, FormsModule, NgIf, AsyncPipe],
   templateUrl: './admin-crud.component.html',
 })
 export class AdminCrudComponent {
@@ -19,8 +24,13 @@ export class AdminCrudComponent {
   userRole = ROLE;
   showEditForm: boolean = false;
   editedUser!: User;
+  hasUsers: boolean = false; 
 
-  constructor(private userService: UserService) {}
+  users$ = this.store.select(selectAllUsers);
+  loading$ = this.store.select(selectUserLoading);
+  error$ = this.store.select(selectUserError);
+
+  constructor(private userService: UserService, private store: Store<AppState>) {}
 
   ngOnInit() {
     if (typeof window !== 'undefined') {
@@ -41,17 +51,12 @@ export class AdminCrudComponent {
       }
     }
 
-    this.loadUsers();
-  }
+    this.store.dispatch(UserActions.loadUsers());
 
-  loadUsers() {
-    this.userService.getUsers().subscribe((users: User[]) => {
-      if (Array.isArray(users)) {
-        this.users = users;
-      } else {
-        this.users = [];
-      }
+    this.users$.subscribe(users => {
+      this.hasUsers = users.length > 1; 
     });
+
   }
 
   approveRecord(user: User) {
@@ -78,8 +83,7 @@ export class AdminCrudComponent {
       } else {
       }
     });
-
-    this.loadUsers();
+    this.store.dispatch(UserActions.loadUsers());
   }
 
   editUser(user: User) {
@@ -121,7 +125,7 @@ export class AdminCrudComponent {
         users[index] = updatedRecord;
         this.showEditForm = false;
         localStorage.setItem('users', JSON.stringify(users));
-        this.loadUsers();
+        this.store.dispatch(UserActions.loadUsers());
         this.tempMessage = `User ${updatedRecord.first_name} updated successfully.`;
         setTimeout(() => {
           this.tempMessage = null;
@@ -153,7 +157,7 @@ export class AdminCrudComponent {
         setTimeout(() => {
           this.tempMessage = null;
         }, 5000);
-        this.loadUsers();
+        this.store.dispatch(UserActions.loadUsers());
       } else {
         this.tempMessage =
           'Failed to delete user or you cannot delete your own record.';
