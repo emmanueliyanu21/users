@@ -4,15 +4,17 @@ import { Observable, catchError, map, of } from 'rxjs';
 
 import { isPlatformBrowser } from '@angular/common';
 import { User } from '../Interface/IUser';
+import { ApiService } from './api.service';
+import { UsersEndpoints } from './endpoint.constant';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = 'https://reqres.in/api/users';
 
   constructor(
     private http: HttpClient,
+    private apiService: ApiService,
     @Inject(PLATFORM_ID) private platformId: any
   ) {}
 
@@ -56,7 +58,8 @@ export class UserService {
       localStorage.setItem('users', JSON.stringify(existingUsers));
     }
 
-    return this.http.post(this.apiUrl, userData);
+    return this.apiService.post(`${UsersEndpoints.users}`, userData);
+
   }
 
   getUsers(): Observable<any[]> {
@@ -131,23 +134,18 @@ export class UserService {
     return Math.random().toString(36).substr(2, 8);
   }
 
-  login(first_name: string, tempKey: string): Observable<boolean> {
+  login(email: string, tempKey: string): Observable<boolean> {
     this.initializeAdminUsers();
     const users = this.getUsers();
     return users.pipe(
       map((usersArray: any[]) => {
         const user = usersArray.find(
           (u) =>
-            (u.first_name === first_name && u.tempKey === tempKey) ||
-            (first_name === 'admin' && tempKey === 'admin')
+            (u.email === email && u.tempKey === tempKey) ||
+            (email === 'admin@gmail.com' && tempKey === 'admin')
         );
 
         if (user) {
-          const authData = {
-            first_name: user.first_name,
-            last_name: user.last_name,
-            avatar: user.avatar || '',
-          };
           localStorage.setItem('authData', JSON.stringify(user));
           this.loginStatusChanged.emit(true);
         }

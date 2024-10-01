@@ -64,12 +64,19 @@
     <ul class="space-y-4">
       <li *ngFor="let user of users$ | async">
         <div
-          class="flex  flex-wrap justify-between items-center p-4"
+          class="flex flex-wrap justify-between items-center p-4"
           *ngIf="user.role !== userRole.DEFAULT_ADMIN"
         >
-          <span class="text-gray-700"
-            >{{ user.first_name }} {{ user.last_name }} - {{ user.email }}</span
-          >
+          <div class="pt-2">
+            <span class="text-gray-700"
+              >{{ user.first_name }} {{ user.last_name }} - {{ user.email }}
+            </span>
+            <div *ngIf="user.approved && user.id === loggedInUser.id + 1"> Temp Key -
+              <span class="text-indigo-600 font-bold">{{
+                user.tempKey
+              }}</span>
+            </div>
+          </div>
           <div class="mt-2 flex space-x-2">
             <button
               class="bg-indigo-600 text-white hover:bg-indigo-700 hover:text-white rounded-md py-2 px-4 transition duration-300"
@@ -106,7 +113,4 @@
     <div class="text-gray-700">No users found.</div>
   </ng-template>
 
-  <div *ngIf="tempMessage" class="text-indigo-600 mt-6">
-    {{ tempMessage }}
-  </div>
 </div>
