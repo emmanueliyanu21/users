@@ -74,7 +74,7 @@ export class AdminCrudComponent {
         this.tempMessage = `Temporary Key: ${tempKey}`;
         setTimeout(() => {
           this.tempMessage = null;
-        }, 5000);
+        }, 20000);
       } else {
       }
     });
