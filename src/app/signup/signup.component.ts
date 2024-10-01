@@ -5,6 +5,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { NgIf } from '@angular/common';
 import { UserService } from '../services/user.service';
 import { HttpClientModule } from '@angular/common/http';
@@ -29,6 +30,8 @@ export class SignupComponent {
 
   users!: User[]
   users$ = this.store.select(selectAllUsers);
+
+  private usersSubscription!: Subscription;
   
   constructor(
     private fb: FormBuilder,
@@ -47,9 +50,10 @@ export class SignupComponent {
   ngOnInit() {
     this.store.dispatch(UserActions.loadUsers());
 
-    this.users$.subscribe(users => {
+    this.usersSubscription = this.users$.subscribe(users => {
       this.users = users
     });
+
   }
 
   get email() {
@@ -97,4 +101,11 @@ export class SignupComponent {
       this.errorMessage = 'Fill the form properly';
     }
   }
+
+  ngOnDestroy() {
+    if (this.usersSubscription) {
+      this.usersSubscription.unsubscribe();
+    }
+  }
+
 }

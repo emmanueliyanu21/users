@@ -73,7 +73,6 @@ export class LoginComponent {
         },
       });
     } else {
-      console.log(this.loginForm);
       
       this.errorMessage = 'Please fill in all fields correctly.';
     }

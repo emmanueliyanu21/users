@@ -72,9 +72,9 @@ export class AdminCrudComponent {
     });
   }
 
-  getUsersUnderAdmin(id: number): number{
+  getUsersUnderAdmin(id: number): number {
     let adminFor = -1;
-    this.userService.getUserById(id).subscribe(user => {
+    this.userService.getUserById(id).subscribe((user) => {
       if (user) {
         adminFor = user.adminFor;
       }
@@ -126,7 +126,7 @@ export class AdminCrudComponent {
     this.updateUser(user);
   }
 
-  updateUser(user: any) {
+  updateUser(user: User) {
     this.showEditForm = true;
 
     if (user.id !== this.getUsersUnderAdmin(this.loggedInUser.id)) {
@@ -141,7 +141,7 @@ export class AdminCrudComponent {
     this.userService.updateRecord(user).subscribe((updatedRecord) => {
       const users = this.userService.getUsersFromLocalStorage();
 
-      const index = users.findIndex((u: any) => u.id === updatedRecord.id);
+      const index = users.findIndex((u: User) => u.id === updatedRecord.id);
       if (index !== -1) {
         users[index] = updatedRecord;
         this.showEditForm = false;
@@ -156,8 +156,6 @@ export class AdminCrudComponent {
   }
 
   openModal(user: User) {
-    console.log(user, 'user modal');
-
     this.selectedUser = user;
     this.isModalOpen = true;
   }
@@ -174,7 +172,6 @@ export class AdminCrudComponent {
   deleteRecord() {
     const userEmail = this.selectedUser.email;
     const user = this.users.find((u) => u.email === userEmail);
-    console.log(user, userEmail, 'ppp', this.users);
 
     if (user) {
       if (user.id !== this.getUsersUnderAdmin(this.loggedInUser.id)) {
@@ -184,17 +181,15 @@ export class AdminCrudComponent {
         }, 5000);
         return;
       }
-      console.log(this.users, 'users before');
 
       const previousIndex = this.users.findIndex((u) => u.adminFor === user.id);
       const previousUser = this.users[previousIndex];
-      console.log(previousUser, 'users previous');
 
       if (previousUser) {
         const updatedUser = {
           ...previousUser,
-          adminFor: user.adminFor
-        }
+          adminFor: user.adminFor,
+        };
         this.userService.updateUser(updatedUser).subscribe((updatedUser) => {
           if (updatedUser) {
             this.notificationService.show(
@@ -205,23 +200,21 @@ export class AdminCrudComponent {
         });
       }
 
-    this.userService.deleteRecord(user.id).subscribe((success) => {
-      if (success) {
-        
-        this.notificationService.show(
-          `User ${userEmail} deleted successfully.`,
-          true
-        );
+      this.userService.deleteRecord(user.id).subscribe((success) => {
+        if (success) {
+          this.notificationService.show(
+            `User ${userEmail} deleted successfully.`,
+            true
+          );
 
-        this.store.dispatch(UserActions.loadUsers());
-      } else {
-        this.notificationService.show(
-          'Failed to delete user or you cannot delete your own record.',
-          false
-        );
-      }
-    });
+          this.store.dispatch(UserActions.loadUsers());
+        } else {
+          this.notificationService.show(
+            'Failed to delete user or you cannot delete your own record.',
+            false
+          );
+        }
+      });
     }
-
   }
 }
