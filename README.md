@@ -17,9 +17,8 @@ This is a single-page application built with Angular, allowing users to register
 - Mock API integration for user management
 
 ## Issues Encountered
-- Initially faced difficulties with RxJS observables when handling user data.
-- Encountered errors with Angular's dependency injection while integrating HttpClient.
-- Adjusted API response handling to support both mock and real API calls.
+- The requirement specifies that a user can only approve and manage the next user in sequence. If an admin user is deleted, it prevents the subsequent user from being edited or deleted, creating a management limitation. 
+Fixed this by reassigning the Admin Role to the next eligible user in the sequence before deleting.
 
 ## Running the Application
 ### Prerequisites

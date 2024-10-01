@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root', // Provide it in the root injector
+  providedIn: 'root',
 })
 export class NotificationService {
   private toastSubject = new Subject<{ message: string, success: boolean }>();

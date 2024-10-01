@@ -12,8 +12,7 @@ import { Router } from '@angular/router';
 import { NotificationService } from '../services/notification.service';
 import { selectAllUsers } from '../store/user.selector';
 import { Store } from '@ngrx/store';
-import { AppState } from '../store/user';
-import { User } from '../Interface/IUser';
+import { AppState, User } from '../store/user';
 import * as UserActions from '../store/user.action';
 
 @Component({
@@ -85,7 +84,7 @@ export class SignupComponent {
                 true
               );
               this.router.navigate(['/login']);
-            }, 3000);
+            }, 1000);
           }
         },
         error: (error) => {

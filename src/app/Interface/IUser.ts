@@ -7,6 +7,7 @@ export interface User {
   role?: string
   approved?: boolean
   tempKey?: string
+  adminFor: number;
 }
 
 export interface UserResponse {

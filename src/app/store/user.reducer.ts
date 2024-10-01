@@ -1,5 +1,5 @@
 import { createReducer, on } from '@ngrx/store';
-import { initialUserState, UserState } from './user';
+import { initialUserState } from './user';
 import * as UserActions from './user.action';
 
 export const USER_KEY = 'user';
