@@ -12,7 +12,7 @@
         <input
           type="text"
           id="first_name"
-          [(ngModel)]="record.first_name"
+          [(ngModel)]="editedUser.first_name"
           name="first_name"
           required
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -26,7 +26,7 @@
         <input
           type="text"
           id="last_name"
-          [(ngModel)]="record.last_name"
+          [(ngModel)]="editedUser.last_name"
           name="last_name"
           required
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -40,7 +40,7 @@
         <input
           type="text"
           id="email"
-          [(ngModel)]="record.email"
+          [(ngModel)]="editedUser.email"
           name="email"
           required
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -71,16 +71,22 @@
             <span class="text-gray-700"
               >{{ user.first_name }} {{ user.last_name }} - {{ user.email }}
             </span>
-            <div *ngIf="user.approved && user.id === loggedInUser.id + 1"> Temp Key -
-              <span class="text-indigo-600 font-bold">{{
-                user.tempKey
-              }}</span>
+            <div
+              *ngIf="
+                user.approved && user.id === getUsersUnderAdmin(loggedInUser.id)
+              "
+            >
+              Temp Key -
+              <span class="text-indigo-600 font-bold">{{ user.tempKey }}</span>
             </div>
           </div>
           <div class="mt-2 flex space-x-2">
             <button
               class="bg-indigo-600 text-white hover:bg-indigo-700 hover:text-white rounded-md py-2 px-4 transition duration-300"
-              *ngIf="!user.approved && +user.id === +loggedInUser.id + 1"
+              *ngIf="
+                !user.approved &&
+                user.id === getUsersUnderAdmin(loggedInUser.id)
+              "
               (click)="approveRecord(user)"
             >
               Approve
@@ -88,7 +94,7 @@
 
             <div *ngIf="user.approved" class="flex space-x-2">
               <button
-                *ngIf="user.id === loggedInUser.id + 1"
+                *ngIf="user.id === getUsersUnderAdmin(loggedInUser.id)"
                 (click)="editUser(user)"
                 class="bg-blue-600 text-white hover:bg-blue-700 rounded-md py-2 px-4 transition duration-300"
               >
@@ -96,8 +102,8 @@
               </button>
 
               <button
-                *ngIf="user.id === loggedInUser.id + 1"
-                (click)="deleteRecord(user.first_name)"
+                *ngIf="user.id === getUsersUnderAdmin(loggedInUser.id)"
+                (click)="openModal(user)"
                 class="bg-red-600 text-white hover:bg-red-700 rounded-md py-2 px-4 transition duration-300"
               >
                 Delete
@@ -112,5 +118,10 @@
   <ng-template #noUsers>
     <div class="text-gray-700">No users found.</div>
   </ng-template>
-
 </div>
+
+<app-modal-component
+  [isModalOpen]="isModalOpen"
+  (modalCanceled)="handleModalCancel()"
+  (confirmUserDelete)="handleDeleteUser()"
+/>

@@ -3,15 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, catchError, map, of } from 'rxjs';
 
 import { isPlatformBrowser } from '@angular/common';
-import { User } from '../Interface/IUser';
 import { ApiService } from './api.service';
 import { UsersEndpoints } from './endpoint.constant';
+import { User } from '../store/user';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-
   constructor(
     private http: HttpClient,
     private apiService: ApiService,
@@ -22,7 +21,7 @@ export class UserService {
 
   initializeAdminUsers() {
     if (typeof window !== 'undefined') {
-      const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
+      const existingUsers = this.getUsersFromLocalStorage();
 
       if (existingUsers.length === 0) {
         const adminUser = {
@@ -30,39 +29,42 @@ export class UserService {
           last_name: 'Admin',
           tempKey: 'admin',
           role: 'defaultAdmin',
+          adminFor: 1,
           avatar: '',
           id: 0,
           email: 'admin@gmail.com',
         };
 
-        localStorage.setItem('users', JSON.stringify([adminUser]));
+        this.saveUsers([adminUser])
       }
     }
   }
 
   submitUser(userData: any): Observable<any> {
     if (typeof window !== 'undefined') {
-      let existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
+      let existingUsers = this.getUsersFromLocalStorage();
 
       if (existingUsers.length === 0) {
         this.initializeAdminUsers();
-        existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
+        existingUsers = this.getUsersFromLocalStorage();
       }
+      const prevUser = existingUsers[existingUsers.length - 1];
+      const prevId = prevUser.id
 
       const newUser = {
         ...userData,
-        id: existingUsers.length,
+        id: prevId + 1,
+        adminFor: prevId + 2,
       };
 
       existingUsers.push(newUser);
-      localStorage.setItem('users', JSON.stringify(existingUsers));
+      this.saveUsers(existingUsers);
     }
 
     return this.apiService.post(`${UsersEndpoints.users}`, userData);
-
   }
 
-  getUsers(): Observable<any[]> {
+  getUsers(): Observable<User[]> {
     if (typeof window !== 'undefined') {
       const localStorageUsers = JSON.parse(
         localStorage.getItem('users') || '[]'
@@ -78,14 +80,13 @@ export class UserService {
     if (isPlatformBrowser(this.platformId)) {
       const users = localStorage.getItem('users');
       return users ? JSON.parse(users) : [];
-    } else {
-      return [];
-    }
+    } 
+    return [];
   }
 
   saveUsersToLocalStorage(users: any) {
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.setItem('users', JSON.stringify(users));
+      this.saveUsers(users);
     }
   }
 
@@ -118,7 +119,7 @@ export class UserService {
   approveUser(user: any): Observable<any> {
     return this.getUsers().pipe(
       map((users) => {
-        const index = users.findIndex((u) => u.username === user.username);
+        const index = users.findIndex((u) => u.email === user.email);
         if (index !== -1) {
           users[index].role = 'admin';
           users[index].tempKey = this.generateTempKey();
@@ -145,8 +146,9 @@ export class UserService {
             (email === 'admin@gmail.com' && tempKey === 'admin')
         );
 
+        const {adminFor, ...authData}  = user;
         if (user) {
-          localStorage.setItem('authData', JSON.stringify(user));
+          localStorage.setItem('authData', JSON.stringify(authData));
           this.loginStatusChanged.emit(true);
         }
 
@@ -173,7 +175,7 @@ export class UserService {
     return this.getUsers().pipe(
       map((users) => {
         const index = users.findIndex(
-          (user) => user.first_name === updatedUser.first_name
+          (user) => user.id === updatedUser.id
         );
         if (index !== -1) {
           users[index] = { ...users[index], ...updatedUser };
@@ -203,22 +205,28 @@ export class UserService {
   }
 
   updateRecord(user: any): Observable<any> {
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const users = this.getUsersFromLocalStorage();
     const index = users.findIndex((u: any) => u.id === user.id);
 
     if (index !== -1) {
       users[index] = user;
-      localStorage.setItem('users', JSON.stringify(users));
+      this.saveUsers(users);
     }
 
     return of(user);
   }
 
-  deleteRecord(username: string): Observable<boolean> {
+  deleteRecord(id: number): Observable<boolean> {
     const users = JSON.parse(localStorage.getItem('users') || '[]');
-    const updatedUsers = users.filter((u: any) => u.first_name !== username);
-
-    localStorage.setItem('users', JSON.stringify(updatedUsers));
+    const updatedUsers = users.filter((u: any) => u.id !== id);
+    this.saveUsers(updatedUsers);
     return of(true);
   }
+
+  getUserById(id: number): Observable<User | null> {
+    return this.getUsers().pipe(
+      map(users => users.find(u => u.id === id) || null)
+    );
+  }
+
 }

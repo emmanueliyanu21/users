@@ -20,7 +20,7 @@ export class ToastNotificationComponent {
       this.message = message;
       this.isSuccess = success;
       this.showToast = true;
-      setTimeout(() => this.showToast = false, 3000); // Auto-hide after 3 seconds
+      setTimeout(() => this.showToast = false, 3000); 
     });
   }
 
