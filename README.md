@@ -16,12 +16,20 @@ This is a single-page application built with Angular, allowing users to register
 - Data persistence using LocalStorage/SessionStorage
 - Mock API integration for user management
 
+## Tools
+- Tailwindcss
+- jasmine
+- NgRx
+
 ## Issues Encountered
 - The requirement specifies that a user can only approve and manage the next user in sequence. If an admin user is deleted, it prevents the subsequent user from being edited or deleted, creating a management limitation. 
 Fixed this by reassigning the Admin Role to the next eligible user in the sequence before deleting.
 
 ## Running the Application
+
 ### Prerequisites
-- Node.js installed on your machine.
+- Node v20 installed on your machine.
 - Angular CLI installed globally.
+  
+### run ```ng serve``` on terminal
 
