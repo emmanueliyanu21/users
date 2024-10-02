@@ -6,6 +6,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { ApiService } from './api.service';
 import { UsersEndpoints } from './endpoint.constant';
 import { User } from '../store/user';
+import { ADMIN_USER } from '../Enum/constants';
 
 @Injectable({
   providedIn: 'root',
@@ -25,14 +26,7 @@ export class UserService {
 
       if (existingUsers.length === 0) {
         const adminUser = {
-          first_name: 'Admin',
-          last_name: 'Admin',
-          tempKey: 'admin',
-          role: 'defaultAdmin',
-          adminFor: 1,
-          avatar: '',
-          id: 0,
-          email: 'admin@gmail.com',
+          ...ADMIN_USER
         };
 
         this.saveUsers([adminUser])
@@ -143,7 +137,7 @@ export class UserService {
         const user = usersArray.find(
           (u) =>
             (u.email === email && u.tempKey === tempKey) ||
-            (email === 'admin@gmail.com' && tempKey === 'admin')
+            (email === ADMIN_USER.email && tempKey === ADMIN_USER.tempKey)
         );
 
         const {adminFor, ...authData}  = user;

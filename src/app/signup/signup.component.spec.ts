@@ -6,6 +6,7 @@ import { UserService } from '../services/user.service';
 import { NotificationService } from '../services/notification.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { FORM_ERROR_MESSAGES } from '../Enum/constants';
 
 describe('SignupComponent', () => {
   let component: SignupComponent;
@@ -72,7 +73,7 @@ describe('SignupComponent', () => {
     component.signupForm.setValue({ first_name: '', last_name: '', email: '' });
     component.onSubmit();
 
-    expect(component.errorMessage).toBe('Fill the form properly');
+    expect(component.errorMessage).toBe(FORM_ERROR_MESSAGES.invalid_form);
     expect(userService.submitUser).not.toHaveBeenCalled();
   });
 
