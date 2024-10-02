@@ -1,15 +1,11 @@
-import {
-  ComponentFixture,
-  TestBed,
-  fakeAsync,
-  tick,
-} from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-import { of, throwError } from 'rxjs';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { Store } from '@ngrx/store'; // import Store
+import { of, throwError } from 'rxjs'; // you'll need to mock store observables
 import { SignupComponent } from './signup.component';
 import { UserService } from '../services/user.service';
 import { NotificationService } from '../services/notification.service';
+import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 
 describe('SignupComponent', () => {
   let component: SignupComponent;
@@ -17,13 +13,25 @@ describe('SignupComponent', () => {
   let userService: jasmine.SpyObj<UserService>;
   let notificationService: jasmine.SpyObj<NotificationService>;
   let router: jasmine.SpyObj<Router>;
+  let store: jasmine.SpyObj<Store>; // mock store
 
   beforeEach(async () => {
-    userService = jasmine.createSpyObj('UserService', ['registerUser']);
+    userService = jasmine.createSpyObj('UserService', ['submitUser']);
+    notificationService = jasmine.createSpyObj('NotificationService', ['show']);
+    router = jasmine.createSpyObj('Router', ['navigate']);
+    store = jasmine.createSpyObj('Store', ['select', 'dispatch']); // mock store methods
+
+    // Make store.select return a mock observable (e.g., of([]) for the users)
+    store.select.and.returnValue(of([]));
 
     await TestBed.configureTestingModule({
       imports: [SignupComponent, FormsModule],
-      providers: [{ provide: UserService, useValue: userService }],
+      providers: [
+        { provide: UserService, useValue: userService },
+        { provide: NotificationService, useValue: notificationService },
+        { provide: Router, useValue: router },
+        { provide: Store, useValue: store }, // provide the mock store
+      ],
     }).compileComponents();
   });
 
@@ -54,9 +62,9 @@ describe('SignupComponent', () => {
     );
     expect(router.navigate).toHaveBeenCalledWith(['/login']);
     expect(component.signupForm.value).toEqual({
-      first_name: '',
-      last_name: '',
-      email: '',
+      first_name: null,
+      last_name: null,
+      email: null,
     }); 
   }));
 

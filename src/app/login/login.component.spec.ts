@@ -49,12 +49,12 @@ describe('LoginComponent', () => {
   });
 
   it('should initialize the form with two controls', () => {
-    expect(component.loginForm.contains('first_name')).toBeTrue();
+    expect(component.loginForm.contains('email')).toBeTrue();
     expect(component.loginForm.contains('tempKey')).toBeTrue();
   });
 
-  it('should require first_name control to be valid', () => {
-    const control = component.loginForm.get('first_name');
+  it('should require email control to be valid', () => {
+    const control = component.loginForm.get('email');
     if (control) {
       control.setValue('');
       expect(control.valid).toBeFalse();
@@ -70,16 +70,16 @@ describe('LoginComponent', () => {
   });
 
   it('should call userService.login when form is valid and submitted', () => {
-    component.loginForm.setValue({ first_name: 'test', tempKey: '12345' });
+    component.loginForm.setValue({ email: 'test@gmail.com', tempKey: '12345' });
     userService.login.and.returnValue(of(true));
 
     component.onLogin();
 
-    expect(userService.login).toHaveBeenCalledOnceWith('test', '12345');
+    expect(userService.login).toHaveBeenCalledOnceWith('test@gmail.com', '12345');
   });
 
   it('should set isSubmitting to true when login is in progress', () => {
-    component.loginForm.setValue({ first_name: 'test', tempKey: '12345' });
+    component.loginForm.setValue({ email: 'test@gmail.com', tempKey: '12345' });
     userService.login.and.returnValue(of(true));
 
     component.onLogin();
@@ -88,7 +88,7 @@ describe('LoginComponent', () => {
   });
 
   it('should navigate to admin-crud on successful login', fakeAsync(() => {
-    component.loginForm.setValue({ first_name: 'test', tempKey: '12345' });
+    component.loginForm.setValue({ email: 'test@gmail.com', tempKey: '12345' });
     userService.login.and.returnValue(of(true));
 
     component.onLogin();
@@ -102,19 +102,19 @@ describe('LoginComponent', () => {
   }));
 
   it('should show error notification on invalid login', () => {
-    component.loginForm.setValue({ first_name: 'test', tempKey: '12345' });
+    component.loginForm.setValue({ email: 'test@gmail.com', tempKey: '12345' });
     userService.login.and.returnValue(of(false));
 
     component.onLogin();
 
     expect(notificationService.show).toHaveBeenCalledWith(
       'Invalid username or temporary key.',
-      true
+      false
     );
   });
 
   it('should show error message when login fails', () => {
-    component.loginForm.setValue({ first_name: 'test', tempKey: '12345' });
+    component.loginForm.setValue({ email: 'test@gmail.com', tempKey: '12345' });
     userService.login.and.returnValue(throwError('error'));
 
     component.onLogin();
