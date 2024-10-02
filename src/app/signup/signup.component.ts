@@ -62,6 +62,7 @@ export class SignupComponent {
 
   onSubmit() {
     if (this.signupForm.invalid) {
+      this.errorMessage = 'Fill the form properly';
       return;
     }
 
@@ -97,8 +98,6 @@ export class SignupComponent {
           this.isSubmitting = false;
         },
       });
-    } else {
-      this.errorMessage = 'Fill the form properly';
     }
   }
 
