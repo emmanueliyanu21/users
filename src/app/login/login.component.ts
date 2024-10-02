@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { NgClass, NgIf } from '@angular/common';
 import { NotificationService } from '../services/notification.service';
+import { FORM_ERROR_MESSAGES } from '../Enum/constants';
 
 @Component({
   selector: 'app-login',
@@ -62,7 +63,7 @@ export class LoginComponent {
           } else {
             this.isSubmitting = false;
             this.notificationService.show(
-              'Invalid username or temporary key.',
+              FORM_ERROR_MESSAGES.invalid_details,
               false
             );
           }
@@ -73,8 +74,7 @@ export class LoginComponent {
         },
       });
     } else {
-      
-      this.errorMessage = 'Please fill in all fields correctly.';
+      this.errorMessage = FORM_ERROR_MESSAGES.invalid_form;
     }
   }
 

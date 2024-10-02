@@ -10,6 +10,7 @@ import { UserService } from '../services/user.service';
 import { NotificationService } from '../services/notification.service';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
+import { FORM_ERROR_MESSAGES } from '../Enum/constants';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -126,6 +127,6 @@ describe('LoginComponent', () => {
 
   it('should show error message if form is invalid', () => {
     component.onLogin();
-    expect(component.errorMessage).toBe('Please fill in all fields correctly.');
+    expect(component.errorMessage).toBe(FORM_ERROR_MESSAGES.invalid_form);
   });
 });

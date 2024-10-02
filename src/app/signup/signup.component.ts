@@ -15,6 +15,7 @@ import { selectAllUsers } from '../store/user.selector';
 import { Store } from '@ngrx/store';
 import { AppState, User } from '../store/user';
 import * as UserActions from '../store/user.action';
+import { ADMIN_USER, FORM_ERROR_MESSAGES } from '../Enum/constants';
 
 @Component({
   selector: 'app-signup',
@@ -62,7 +63,7 @@ export class SignupComponent {
 
   onSubmit() {
     if (this.signupForm.invalid) {
-      this.errorMessage = 'Fill the form properly';
+      this.errorMessage = FORM_ERROR_MESSAGES.invalid_form;
       return;
     }
 
@@ -70,8 +71,8 @@ export class SignupComponent {
 
     const emailExists = this.users.some((user) => user.email === newUserEmail);
 
-    if (emailExists) {
-      this.errorMessage = 'User with this email already exists';
+    if (emailExists || newUserEmail === ADMIN_USER.email) {
+      this.errorMessage = FORM_ERROR_MESSAGES.existing_email;
       return; 
     }
 
